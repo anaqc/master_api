@@ -51,6 +51,10 @@ def find_post_by_id(post_id):
 
 @app.route('/api/posts/<int:id>', methods=['DELETE'])
 def delete_post(id):
+    """
+    Delete a blog post by its ID and return the deleted
+    post data  message.
+    """
     # Find the post with the given ID
     post = find_post_by_id(id)
     index = 0
@@ -93,6 +97,27 @@ def update_post(id):
     })
     # Return the updated post
     return jsonify({"message" : f"Post {id} updated successfully"})
+
+
+@app.route("/api/posts/search", methods=["GET"])
+def search():
+    # Get query parameters
+    title = request.args.get("title", "").lower()
+    content = request.args.get("content", "").lower()
+    searched_post = []
+    if title is not "" and content is not "":
+        for post in POSTS:
+            if  title in post.get("title").lower() or content in post.get("content").lower():
+                searched_post.append(post)
+    elif title is not "":
+        for post in POSTS:
+            if  title in post.get("title").lower():
+                searched_post.append(post)
+    elif content is not "":
+        for post in POSTS:
+            if  content in post.get("content").lower():
+                searched_post.append(post)
+    return jsonify(searched_post), 200
 
 
 if __name__ == '__main__':
