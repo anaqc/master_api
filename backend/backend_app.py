@@ -1,9 +1,23 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
+
+
+SWAGGER_URL="/api/docs"  # (1) swagger endpoint e.g. HTTP://localhost:5002/api/docs
+API_URL="/static/master_blog.json" # (2) ensure you create this dir and file
+
+swagger_ui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': 'Masterblog API' # (3) You can change this if you like
+    }
+)
+
+
+app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 CORS(app)  # This will enable CORS for all routes
 
 POSTS = [
@@ -161,15 +175,15 @@ def search():
     title = request.args.get("title", "").lower()
     content = request.args.get("content", "").lower()
     searched_post = []
-    if title is not "" and content is not "":
+    if title != "" and content != "":
         for post in POSTS:
             if  title in post.get("title").lower() or content in post.get("content").lower():
                 searched_post.append(post)
-    elif title is not "":
+    elif title != "":
         for post in POSTS:
             if  title in post.get("title").lower():
                 searched_post.append(post)
-    elif content is not "":
+    elif content != "":
         for post in POSTS:
             if  content in post.get("content").lower():
                 searched_post.append(post)

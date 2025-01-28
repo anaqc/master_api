@@ -1,0 +1,160 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Masterblog API",
+    "version": "1.0.0"
+  },
+  "servers": [{"url": "http://localhost:5001"}],
+  "tags": [{
+      "name": "Post",
+      "description": "Post API - CRUD"
+    }
+  ],
+  "paths": {
+    "/api/posts": {
+      "get": {
+        "summary": "Returns all posts",
+        "description": "Get all posts with optional sorting and pagination",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Field to sort by (title or content)",
+            "required": false,
+            "type": "string",
+            "enum": ["title", "content"]
+          },
+                    {
+            "name": "direction",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "type": "string",
+            "enum": ["asc", "desc"]
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items per page",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {"description": "Successful operation"},
+          "400": {"description": "Bad Request - Invalid parameters"}
+        }
+      },
+      "post": {
+        "summary": "Add a new post",
+        "description": "Create a new blog post",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Post object",
+            "required": true,
+            "example": {
+              "title": "Sample Post Title",
+              "content": "This is the content of the post"
+            }
+          }
+        ],
+        "responses": {
+          "201": {"description": "Post created successfully"},
+          "400": {"description": "Invalid request, missing fields"}
+        }
+      }
+    },
+    "/api/posts/{id}": {
+      "put": {
+        "summary": "Update an existing post",
+        "description": "Update a post by its ID",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of post to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated post object",
+            "required": true,
+            "example": {
+              "title": "Sample Post Title",
+              "content": "This is the content of the post"
+            }
+          }
+        ],
+        "responses": {
+          "200": {"description": "Post updated successfully"},
+          "404": {"description": "Post not found"}
+        }
+      },
+      "delete": {
+        "summary": "Delete a post",
+        "description": "Delete a post by its ID",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of post to delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {"description": "Post deleted successfully"},
+          "404": {"description": "Post not found"}
+        }
+      }
+    },
+    "/api/posts/search": {
+      "get": {
+        "summary": "Search posts",
+        "description": "Search posts by title and/or content",
+        "produces": ["application/json"],
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Search in post titles",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "description": "Search in post contents",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {"description": "Successful operation"}
+        }
+      }
+    }
+  }
+}
+
+
