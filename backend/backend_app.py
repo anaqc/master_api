@@ -174,20 +174,16 @@ def search():
     # Get query parameters
     title = request.args.get("title", "").lower()
     content = request.args.get("content", "").lower()
-    searched_post = []
     if title != "" and content != "":
-        for post in POSTS:
-            if  title in post.get("title").lower() or content in post.get("content").lower():
-                searched_post.append(post)
+        searched_post = [post for post in POSTS if title in post["title"].lower() and
+                             content in post["content"].lower()]
+        return jsonify(searched_post), 200
     elif title != "":
-        for post in POSTS:
-            if  title in post.get("title").lower():
-                searched_post.append(post)
+        searched_post = [post for post in POSTS if title in post["title"].lower()]
+        return jsonify(searched_post), 200
     elif content != "":
-        for post in POSTS:
-            if  content in post.get("content").lower():
-                searched_post.append(post)
-    return jsonify(searched_post), 200
+        searched_post = [post for post in POSTS if content in post["content"].lower()]
+        return jsonify(searched_post), 200
 
 
 if __name__ == '__main__':
